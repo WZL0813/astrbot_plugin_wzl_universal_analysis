@@ -1,0 +1,2 @@
+# astrbot_plugin_wzl_universal-analysis
+astrbot_plugin_wzl_universal-analysis万能链接解析器
