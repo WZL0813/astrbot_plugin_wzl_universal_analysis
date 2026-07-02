@@ -118,6 +118,9 @@ class Downloader:
                         raise SizeLimitException
 
                     downloaded = 0
+                    # 确保缓存目录存在
+                    import os
+                    os.makedirs(os.path.dirname(file_path), exist_ok=True)
                     with self.get_progress_bar(file_name, content_length) as bar:
                         async with aiofiles.open(file_path, "wb") as file:
                             async for chunk in response.content.iter_chunked(

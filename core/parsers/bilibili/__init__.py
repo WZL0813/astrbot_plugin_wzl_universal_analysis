@@ -402,6 +402,7 @@ class BilibiliParser(BaseParser):
         """
 
         from bilibili_api.video import (
+            AudioQuality,
             AudioStreamDownloadURL,
             VideoDownloadURLDataDetecter,
             VideoStreamDownloadURL,
@@ -413,24 +414,51 @@ class BilibiliParser(BaseParser):
         # 获取下载数据
         download_url_data = await video.get_download_url(page_index=page_index)
         detecter = VideoDownloadURLDataDetecter(download_url_data)
-        streams = detecter.detect_best_streams(
-            video_max_quality=self.video_quality,
-            codecs=[self.video_codecs],
-            no_dolby_video=True,
-            no_hdr=True,
-        )
-        video_stream = streams[0]
-        if not isinstance(video_stream, VideoStreamDownloadURL):
-            raise DownloadException("未找到可下载的视频流")
-        logger.debug(
-            f"视频流质量: {video_stream.video_quality.name}, 编码: {video_stream.video_codecs}"
-        )
 
-        audio_stream = streams[1]
-        if not isinstance(audio_stream, AudioStreamDownloadURL):
-            return video_stream.url, None
-        logger.debug(f"音频流质量: {audio_stream.audio_quality.name}")
-        return video_stream.url, audio_stream.url
+        if detecter.check_flv_mp4_stream():
+            streams = detecter.detect_all()
+            return streams[0].url, None
+        else:
+            streams = detecter.detect(
+                video_max_quality=self.video_quality,
+                codecs=[self.video_codecs],
+                no_dolby_video=True,
+                no_hdr=True,
+            )
+
+            video_streams = [
+                s for s in streams if isinstance(s, VideoStreamDownloadURL)
+            ]
+            audio_streams = [
+                s for s in streams if isinstance(s, AudioStreamDownloadURL)
+            ]
+
+            if not video_streams:
+                raise DownloadException("未找到可下载的视频流")
+
+            codecs = [self.video_codecs]
+            video_streams.sort(
+                key=lambda s: (
+                    s.video_quality.value,
+                    codecs.index(s.video_codecs) if s.video_codecs in codecs else len(codecs),
+                ),
+                reverse=True,
+            )
+            video_stream = video_streams[0]
+
+            logger.debug(
+                f"视频流质量: {video_stream.video_quality.name}, 编码: {video_stream.video_codecs}"
+            )
+
+            if audio_streams:
+                audio_streams.sort(
+                    key=lambda s: s.audio_quality.value, reverse=True
+                )
+                audio_stream = audio_streams[0]
+                logger.debug(f"音频流质量: {audio_stream.audio_quality.name}")
+                return video_stream.url, audio_stream.url
+            else:
+                return video_stream.url, None
 
 
 
