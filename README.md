@@ -1,9 +1,9 @@
 
 <div align="center">
 
-![:name](https://count.getloli.com/@Ryokuryuneko?name=astrbot_plugin_wzl_universal-analysis&theme=minecraft&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto)
+![:name](https://count.getloli.com/@Ryokuryuneko?name=astrbot_plugin_wzl_universal_analysis&theme=minecraft&padding=6&offset=0&align=top&scale=1&pixelated=1&darkmode=auto)
 
-# astrbot_plugin_wzl_universal-analysis
+# astrbot_plugin_wzl_universal_analysis
 
 _✨ 万能链接解析器 ✨_  
 
@@ -55,7 +55,7 @@ _✨ 万能链接解析器 ✨_
 
 ## 💿 安装
 
-astrbot_plugin_wzl_universal-analysis，安装，等待完成即可
+astrbot_plugin_wzl_universal_analysis，安装，等待完成即可
 
 ## ⚙️ 配置
 
@@ -121,7 +121,7 @@ astrbot_plugin_wzl_universal-analysis，安装，等待完成即可
 
 插件支持自定义解析器，通过继承 `BaseParser` 类并实现 `platform`, `handle` 即可。
 
-示例解析器请看 [示例解析器](https://github.com/WZL0813/astrbot_plugin_wzl_universal-analysis/blob/main/core/parsers/example.py)
+示例解析器请看 [示例解析器](https://github.com/WZL0813/astrbot_plugin_wzl_universal_analysis/blob/main/core/parsers/example.py)
 
 ---
 
